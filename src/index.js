@@ -1,18 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#create-task-form");
+  const taskList = document.querySelector("#tasks");
+  let sortAscending = true;
    
   //Add Tasks
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const task = document.querySelector("#new-task-description").value;
-    const taskList = document.querySelector("#tasks");
+    const priority = document.querySelector("#new-task-priority").value;
+    if (task.trim() === "") {
+      alert("Please enter a task");
+      return;
+    }
     const taskItem = document.createElement("li");
     taskItem.textContent = task;
+    taskItem.style.color = getPriorityColor(priority);
+
     taskList.appendChild(taskItem);
   });
 
   taskList.innerHTML = "";
-  taskArrays.forEach(task => taskList.appendChild(task));
 
   sortAscending = !sortAscending;
 
@@ -20,12 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
   sortButton.textContent = sortAscending ? "Sort Descending" : "Sort Ascending";
   
   // Add edit and delete buttons
-  const deleteButton = document.createElement("delete-button");
+  const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
   deleteButton.addEventListener("click", () => taskItem.remove());
-  taskList.appendChild(deleteButton);
+  taskItem.appendChild(deleteButton);
 
-  const editButton = document.createElement("edit-button");
+  const editButton = document.createElement("button");
   editButton.textContent = "Edit";
   editButton.addEventListener("click", () => {
     const newTask = prompt("Edit task", taskItem.textContent);
@@ -33,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
       taskItem.textContent = newTask;
     }
   });
-  taskList.appendChild(editButton);
+  taskItem.appendChild(editButton);
 
 
   //Function to sort tasks by priority
@@ -50,9 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   sortButton.addEventListener("click", sortTasks);
 
-  const priority = document.querySelector("#new-task-priority").value;
-  taskItem.style.color = getPriorityColor(priority);
-  Color(priority);
+
 
   //Function to sort tasks color by priority
   function getPriorityColor(priority) {
